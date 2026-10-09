@@ -1,0 +1,17 @@
+<%- include('../partials/plain-start', { title: message.subject }) %>
+<p class="back-link"><a href="/dev/mailbox"><%- include('../partials/icon', { name: 'arrow-left', size: 16 }) %> All emails</a></p>
+
+<section class="card card--flush mail-view">
+  <header class="mail-view__header">
+    <h1 class="mail-view__subject"><%= message.subject %></h1>
+    <dl class="mail-view__meta">
+      <div><dt>To</dt><dd><%= message.to %></dd></div>
+      <div><dt>Sent</dt><dd><%= formatDateTime(message.sentAt) %></dd></div>
+    </dl>
+    <% if (message.action) { %>
+    <a class="btn btn--primary btn--sm" href="<%= message.action.url %>"><%= message.action.label %> <%- include('../partials/icon', { name: 'arrow-right', size: 14 }) %></a>
+    <% } %>
+  </header>
+  <iframe class="mail-view__frame" src="/dev/mailbox/<%= message.id %>/raw" title="Email preview" sandbox="allow-top-navigation-by-user-activation"></iframe>
+</section>
+<%- include('../partials/plain-end') %>

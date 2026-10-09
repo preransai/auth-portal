@@ -1,0 +1,50 @@
+<%- include('../partials/auth-start', { title: 'Sign in', formNo: 'AP-1' }) %>
+<div class="auth__header">
+  <h1 class="auth__title">Sign in</h1>
+  <p class="auth__subtitle">New here? <a href="/register">Create an account</a></p>
+</div>
+
+<% if (locals.formError) { %>
+<div class="alert alert--error" role="alert" id="login-error">
+  <%- include('../partials/icon', { name: 'alert' }) %>
+  <div>
+    <p><%= formError %></p>
+    <% if (locals.showResendLink) { %>
+    <p class="alert__action"><a href="/verify-email/resend?email=<%= encodeURIComponent(values.email || '') %>">Send me a new verification link</a></p>
+    <% } %>
+    <% if (locals.showResetLink) { %>
+    <p class="alert__action"><a href="/forgot-password">Reset your password</a></p>
+    <% } %>
+  </div>
+</div>
+<% } %>
+
+<form action="/login" method="post" class="form" novalidate data-validate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <%- include('../partials/field', {
+    id: 'email', label: 'Email address', type: 'email', value: values.email, error: errors.email,
+    autocomplete: 'username', attrs: 'required maxlength="254" spellcheck="false" autofocus'
+  }) %>
+
+  <%- include('../partials/password-field', {
+    id: 'password', label: 'Password', error: errors.password, autocomplete: 'current-password',
+    attrs: 'required maxlength="128"',
+    labelAside: '<a class="field__aside" href="/forgot-password">Forgot password?</a>'
+  }) %>
+
+  <div class="form__row">
+    <label class="checkbox">
+      <input type="checkbox" name="remember" <%= values.remember === 'on' ? 'checked' : '' %>>
+      <span>Keep me signed in for 30 days</span>
+    </label>
+  </div>
+
+  <button type="submit" class="btn btn--primary btn--block" data-loading-text="Signing in...">Sign in</button>
+</form>
+
+<p class="auth__note">
+  <%- include('../partials/icon', { name: 'lock', size: 15 }) %>
+  After <%= security.maxFailedLogins %> wrong passwords in a row, the account is locked for <%= security.lockMinutes %> minutes.
+</p>
+<%- include('../partials/auth-end') %>

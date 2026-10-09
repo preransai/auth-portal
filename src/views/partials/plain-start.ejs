@@ -1,0 +1,24 @@
+<%- include('head') %>
+<body class="page-plain">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="/">
+        <span class="brand__mark"><%- include('icon', { name: 'logo', size: 26 }) %></span>
+        <span class="brand__name"><%= appName %></span>
+      </a>
+      <div class="topbar__user">
+        <% if (locals.currentUser) { %>
+        <a class="btn btn--ghost btn--sm" href="/dashboard"><%- include('icon', { name: 'arrow-left', size: 16 }) %>Dashboard</a>
+        <% } else { %>
+        <a class="btn btn--ghost btn--sm" href="/login">Sign in</a>
+        <a class="btn btn--primary btn--sm" href="/register">Create account</a>
+        <% } %>
+      </div>
+    </div>
+  </header>
+  <div class="microprint microprint--bleed" aria-hidden="true"></div>
+
+  <%- include('toasts') %>
+
+  <main class="container" id="main">

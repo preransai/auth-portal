@@ -1,0 +1,27 @@
+<%- include('../partials/plain-start', { title: 'Terms of use' }) %>
+<article class="card prose">
+  <h1>Terms of use</h1>
+  <p class="muted">Last updated October 2026</p>
+
+  <p>
+    <%= appName %> is a student project built to practise secure authentication in Node.js.
+    It isn't a commercial service, so please don't store anything here you'd mind losing.
+  </p>
+
+  <h2>Your account</h2>
+  <ul>
+    <li>Use an email address you can access. Your account stays inactive until you click the verification link.</li>
+    <li>Pick a password you don't use anywhere else. It's stored only as a bcrypt hash, so nobody (including the admin) can read it.</li>
+    <li>After several wrong passwords in a row the account is locked for a short time to slow down guessing.</li>
+  </ul>
+
+  <h2>What gets stored</h2>
+  <p>
+    Your name, email, a hash of your password, and a log of sign-in attempts (time, IP address and browser)
+    so you can spot activity you don't recognise. Deleting your account from the settings page removes all of it.
+  </p>
+
+  <h2>Acceptable use</h2>
+  <p>Don't try to break into other people's accounts or overload the service. Admins can deactivate accounts that do.</p>
+</article>
+<%- include('../partials/plain-end') %>

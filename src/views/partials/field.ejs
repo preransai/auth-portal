@@ -1,0 +1,22 @@
+<%
+  // Usage: include('field', { id, label, type, value, error, autocomplete, attrs, hint })
+  const fieldError = locals.error;
+  const describedBy = [locals.hint && `${id}-hint`, fieldError && `${id}-error`].filter(Boolean).join(' ');
+%>
+<div class="field<%= fieldError ? ' field--error' : '' %>">
+  <label class="field__label" for="<%= id %>"><%= label %></label>
+  <input
+    class="input"
+    id="<%= id %>"
+    name="<%= locals.fieldName || id %>"
+    type="<%= locals.type || 'text' %>"
+    value="<%= locals.value || '' %>"
+    <% if (locals.autocomplete) { %>autocomplete="<%= autocomplete %>"<% } %>
+    <% if (describedBy) { %>aria-describedby="<%= describedBy %>"<% } %>
+    <% if (fieldError) { %>aria-invalid="true"<% } %>
+    <%- locals.attrs || '' %>>
+  <% if (locals.hint) { %><p class="field__hint" id="<%= id %>-hint"><%= hint %></p><% } %>
+  <% if (fieldError) { %>
+  <p class="field__error" id="<%= id %>-error"><%- include('icon', { name: 'alert', size: 15 }) %><span><%= fieldError %></span></p>
+  <% } %>
+</div>

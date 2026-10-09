@@ -1,0 +1,49 @@
+<%- include('../partials/auth-start', { title: 'Create account', formNo: 'AP-2', passwordTools: true }) %>
+<div class="auth__header">
+  <h1 class="auth__title">Create your account</h1>
+  <p class="auth__subtitle">Already registered? <a href="/login">Sign in</a></p>
+</div>
+
+<% if (locals.formError) { %>
+<div class="alert alert--error" role="alert"><%- include('../partials/icon', { name: 'alert' }) %><p><%= formError %></p></div>
+<% } %>
+
+<form action="/register" method="post" class="form" novalidate data-validate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <%- include('../partials/field', {
+    id: 'name', label: 'Full name', value: values.name, error: errors.name,
+    autocomplete: 'name', attrs: 'required minlength="2" maxlength="60"'
+  }) %>
+
+  <%- include('../partials/field', {
+    id: 'email', label: 'Email address', type: 'email', value: values.email, error: errors.email,
+    autocomplete: 'email', attrs: 'required maxlength="254" spellcheck="false"'
+  }) %>
+
+  <%- include('../partials/password-field', {
+    id: 'password', label: 'Password', error: errors.password,
+    autocomplete: 'new-password', attrs: 'required minlength="8" maxlength="64"'
+  }) %>
+
+  <%- include('../partials/password-rules', { target: 'password', emailFrom: 'email' }) %>
+
+  <%- include('../partials/password-field', {
+    id: 'confirmPassword', label: 'Confirm password', error: errors.confirmPassword,
+    autocomplete: 'new-password', attrs: 'required maxlength="64" data-match="password"'
+  }) %>
+
+  <div class="field field--declaration<%= errors.terms ? ' field--error' : '' %>">
+    <label class="checkbox">
+      <input type="checkbox" name="terms" required <%= values.terms === 'on' ? 'checked' : '' %>
+        <% if (errors.terms) { %>aria-invalid="true" aria-describedby="terms-error"<% } %>>
+      <span>I declare that I have read the <a href="/terms" target="_blank" rel="noopener">terms of use</a> and agree to them.</span>
+    </label>
+    <% if (errors.terms) { %>
+    <p class="field__error" id="terms-error"><%- include('../partials/icon', { name: 'alert', size: 15 }) %><span><%= errors.terms %></span></p>
+    <% } %>
+  </div>
+
+  <button type="submit" class="btn btn--primary btn--block" data-loading-text="Creating account...">Create account</button>
+</form>
+<%- include('../partials/auth-end') %>

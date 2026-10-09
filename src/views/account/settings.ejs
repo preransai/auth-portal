@@ -1,0 +1,84 @@
+<%- include('../partials/app-start', { title: 'Account settings', passwordTools: true }) %>
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Account settings</h1>
+    <p class="page-subtitle">Update your name, change your password or delete your account.</p>
+  </div>
+</div>
+
+<div class="settings">
+  <section class="card settings__section" id="profile" aria-labelledby="profile-heading">
+    <div class="settings__intro">
+      <h2 class="card__title" id="profile-heading">Profile</h2>
+      <p class="card__subtitle">This name appears on your dashboard and in emails we send you.</p>
+    </div>
+    <form action="/account/profile" method="post" class="form settings__form" novalidate data-validate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <%- include('../partials/field', {
+        id: 'name', label: 'Full name', value: values.name, error: errors.name,
+        autocomplete: 'name', attrs: 'required minlength="2" maxlength="60"'
+      }) %>
+      <div class="field">
+        <label class="field__label" for="email-readonly">Email address</label>
+        <input class="input" id="email-readonly" type="email" value="<%= currentUser.email %>" readonly aria-describedby="email-readonly-hint">
+        <p class="field__hint" id="email-readonly-hint">Your email is your sign-in name and can't be changed here.</p>
+      </div>
+      <div class="form__actions">
+        <button type="submit" class="btn btn--primary" data-loading-text="Saving...">Save name</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card settings__section" id="change-password" aria-labelledby="password-heading">
+    <div class="settings__intro">
+      <h2 class="card__title" id="password-heading">Change password</h2>
+      <p class="card__subtitle">You'll stay signed in here. Every other device is signed out straight away.</p>
+    </div>
+    <form action="/account/password" method="post" class="form settings__form" novalidate data-validate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="text" class="visually-hidden" name="username" value="<%= currentUser.email %>" autocomplete="username" tabindex="-1" aria-hidden="true" readonly>
+      <%- include('../partials/password-field', {
+        id: 'currentPassword', label: 'Current password', error: errors.currentPassword,
+        autocomplete: 'current-password', attrs: 'required maxlength="128"'
+      }) %>
+      <%- include('../partials/password-field', {
+        id: 'newPassword', label: 'New password', error: errors.newPassword,
+        autocomplete: 'new-password', attrs: 'required minlength="8" maxlength="64"'
+      }) %>
+      <%- include('../partials/password-rules', { target: 'newPassword', email: currentUser.email }) %>
+      <%- include('../partials/password-field', {
+        id: 'confirmPassword', label: 'Confirm new password', error: errors.confirmPassword,
+        autocomplete: 'new-password', attrs: 'required maxlength="64" data-match="newPassword"'
+      }) %>
+      <div class="form__actions">
+        <button type="submit" class="btn btn--primary" data-loading-text="Updating...">Update password</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card settings__section settings__section--danger" id="delete" aria-labelledby="delete-heading">
+    <div class="settings__intro">
+      <h2 class="card__title" id="delete-heading">Delete account</h2>
+      <p class="card__subtitle">Removes your account, sign-in history and any pending links. This can't be undone.</p>
+    </div>
+    <form action="/account/delete" method="post" class="form settings__form" novalidate data-validate
+      data-confirm="Delete your account permanently? This can't be undone.">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="text" class="visually-hidden" name="username" value="<%= currentUser.email %>" autocomplete="username" tabindex="-1" aria-hidden="true" readonly>
+      <%- include('../partials/password-field', {
+        id: 'deletePassword', label: 'Your password', error: errors.deletePassword,
+        autocomplete: 'current-password', attrs: 'required maxlength="128"'
+      }) %>
+      <%- include('../partials/field', {
+        id: 'confirmText', label: 'Type DELETE to confirm', error: errors.confirmText,
+        autocomplete: 'off', attrs: 'required pattern="DELETE" spellcheck="false" data-pattern-message="Type DELETE in capital letters."'
+      }) %>
+      <div class="form__actions">
+        <button type="submit" class="btn btn--danger" data-loading-text="Deleting...">
+          <%- include('../partials/icon', { name: 'trash', size: 16 }) %> Delete my account
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+<%- include('../partials/app-end') %>

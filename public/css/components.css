@@ -1,0 +1,837 @@
+/* Alerts, notice slips, rubber stamps (badges, seals, postmark, entry stamp), photos,
+   registers (tables), observations, NIL marks, the data page and its MRZ. */
+
+/* Alerts: inline notices in forms. The wrapper colour sets the icon and the rule. */
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid currentColor;
+  border-left-width: 5px;
+  border-radius: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.alert .icon {
+  margin-top: 2px;
+  color: currentColor;
+}
+
+.alert--error {
+  background: var(--red-wash);
+  color: var(--red);
+}
+
+.alert--success {
+  background: var(--admit-wash);
+  color: var(--admit);
+}
+
+.alert--info {
+  background: var(--notice-wash);
+  color: var(--ink-2);
+}
+
+.alert p {
+  color: var(--ink);
+}
+
+.alert a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.alert a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.alert__action {
+  margin-top: 4px;
+}
+
+.alert strong {
+  font-weight: 600;
+}
+
+/* Toasts = notice slips set down on the counter. Fixed to the viewport. */
+
+.toasts {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  display: grid;
+  gap: 10px;
+  width: min(380px, calc(100vw - 24px));
+  pointer-events: none;
+}
+
+.toast {
+  --t: var(--admit);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 10px 12px 14px;
+  border: 1px solid var(--ink);
+  border-left: 5px solid var(--t);
+  background: var(--field);
+  pointer-events: auto;
+  animation: slip-in 180ms ease-out both;
+}
+
+.toast--error,
+.toast--warning {
+  --t: var(--red);
+}
+
+.toast--info {
+  --t: var(--ink-2);
+}
+
+.toast__label {
+  font: 700 13px/1.45 var(--font-ui);
+  color: var(--t);
+  white-space: nowrap;
+}
+
+.toast__text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.toast__close {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  margin: -3px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.toast__close:hover {
+  outline: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.toast__close .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.toast.is-leaving {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 160ms, transform 160ms;
+}
+
+@keyframes slip-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Register stamps (badges): small rubber stamps, ink set through --ink-c. */
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 7px;
+}
+
+.badge {
+  --ink-c: var(--ink-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 8px 0 7px;
+  border: 1.5px solid var(--ink-c);
+  border-radius: 3px;
+  color: var(--ink-c);
+  font: 700 11.5px/1 var(--font-ui);
+  letter-spacing: var(--track-stamp);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badge .icon {
+  width: 12px;
+  height: 12px;
+  stroke-width: 2.25;
+}
+
+.badge--success {
+  --ink-c: var(--admit);
+}
+
+.badge--danger {
+  --ink-c: var(--red);
+}
+
+/* LOCKED: a heavier double ring */
+.badge--warning {
+  --ink-c: var(--red);
+  border: 3px double var(--red);
+  padding: 0 7px 0 6px;
+}
+
+/* UNVERIFIED: pending, dashed */
+.badge--neutral {
+  border-style: dashed;
+}
+
+/* ADMIN: privileged, filled */
+.badge--primary {
+  --ink-c: var(--oxblood);
+  background: var(--oxblood);
+  color: var(--cover-text);
+}
+
+/* Office seal: inline SVG, ring text on <textPath>, the word straight across the centre. */
+
+.seal {
+  --ink-c: var(--admit);
+  display: inline-block;
+  color: var(--ink-c);
+  line-height: 0;
+}
+
+.seal--red {
+  --ink-c: var(--red);
+}
+
+.seal--ink {
+  --ink-c: var(--ink);
+}
+
+.seal__svg,
+.postmark__svg {
+  overflow: visible;
+}
+
+.seal__ring {
+  font: 700 8.4px var(--font-ui);
+  letter-spacing: var(--track-stamp);
+  fill: currentColor;
+}
+
+.seal__ring--date {
+  font: 600 8.8px var(--font-mono);
+  letter-spacing: var(--track-mono);
+}
+
+.seal__word {
+  font: 800 15.5px var(--font-ui);
+  letter-spacing: var(--track-stamp);
+  fill: currentColor;
+}
+
+/* Postmark (verify-sent, empty mailbox): black ink, the post office is not the immigration desk. */
+
+.postmark {
+  display: inline-block;
+  color: var(--ink);
+  line-height: 0;
+}
+
+.postmark__word {
+  font: 800 13.5px var(--font-ui);
+  letter-spacing: var(--track-stamp);
+  fill: currentColor;
+}
+
+.postmark__word--long {
+  font-size: 11.5px;
+}
+
+/* Entry stamp: the dashboard's last sign-in. */
+
+.entry-stamp {
+  --ink-c: var(--admit);
+  --grain-at: -101px -7px;
+  width: 292px;
+  max-width: 100%;
+  margin: 16px 0 0 4px;
+  padding: 12px 18px 13px;
+  border: 2px solid var(--ink-c);
+  border-radius: 18px;
+  outline: 1px solid var(--ink-c);
+  outline-offset: -6px;
+  color: var(--ink-c);
+  transform: rotate(-2.2deg);
+  transform-origin: 20% 50%;
+}
+
+.entry-stamp__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding-bottom: 7px;
+  border-bottom: 1px solid currentColor;
+  font: 700 10.5px/1 var(--font-ui);
+  letter-spacing: var(--track-stamp);
+  text-transform: uppercase;
+}
+
+.entry-stamp__top span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.entry-stamp__top .icon {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  stroke-width: 2;
+}
+
+.entry-stamp dl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin: 0;
+}
+
+.entry-stamp dd {
+  margin: 0;
+}
+
+.entry-stamp__date,
+.entry-stamp__time {
+  flex: 0 0 100%;
+}
+
+.entry-stamp .entry-stamp__date {
+  margin-top: 8px;
+  font: 700 27px/1 var(--font-mono);
+  letter-spacing: var(--track-mono);
+}
+
+.entry-stamp .entry-stamp__time {
+  margin-top: 3px;
+  font: 600 14px/1.3 var(--font-mono);
+}
+
+/* Ruled bottom row: device left, IP right. A long pair (Samsung Internet + IPv6) wraps the IP
+   onto its own ruled line, right-aligned; an IPv6 longer than the stamp breaks anywhere. */
+.entry-stamp .entry-stamp__device,
+.entry-stamp .entry-stamp__ip {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid currentColor;
+  font: 600 11.5px/1.35 var(--font-mono);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.entry-stamp__device {
+  flex: 1 1 auto;
+}
+
+.entry-stamp__ip {
+  flex: 1 1 auto;
+  padding-left: 12px;
+  text-align: right;
+}
+
+.entry-stamp--blank {
+  --ink-c: var(--ink-3);
+  border-style: dashed;
+  outline: 0;
+  transform: none;
+}
+
+/* "You" tag */
+
+.tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 5px 2px;
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 11.5px/1.3 var(--font-ui);
+  vertical-align: 1px;
+}
+
+/* Avatar = passport photo: 3:4 portrait, photo-booth grey, Caslon initial.
+   The tone only changes the initial's ink (no red: red means refused). */
+
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 34px;
+  padding-top: 3px;
+  border-radius: 0;
+  background: var(--photo);
+  color: var(--ink);
+  font: 400 17px/1 var(--font-doc);
+  outline: 1px solid rgba(31, 26, 29, 0.18);
+  outline-offset: -1px;
+}
+
+.avatar--t1 { color: var(--admit); }
+.avatar--t2 { color: var(--sepia); }
+.avatar--t3 { color: var(--oxblood); }
+.avatar--t4 { color: var(--ink-2); }
+.avatar--t5 { color: var(--graphite); }
+
+.avatar--sm {
+  width: 24px;
+  height: 31px;
+  font-size: 16px;
+}
+
+/* Cards are gone: sections are ruled, not boxed. The class stays as a hook. */
+
+.card--flush {
+  overflow: visible;
+}
+
+.card__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.card__title {
+  font: 400 24px/1.2 var(--font-doc);
+}
+
+.card__subtitle {
+  margin-top: 5px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
+.card__big {
+  margin-top: 18px;
+  font: 400 23px/1.2 var(--font-doc);
+}
+
+.card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.card__link .icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* Observations */
+
+.meta {
+  display: grid;
+  margin: 12px 0 0;
+  border-top: 1px solid var(--ink);
+  font-size: 14px;
+}
+
+.meta > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.meta dt {
+  color: var(--ink-2);
+}
+
+.meta dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 500;
+}
+
+/* Registers: tables become ledgers. A 2px ink rule above the header, 1px below it and
+   after the last row, and 01...10 row numbers from a CSS counter. */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  counter-reset: entry;
+  font-size: 14.5px;
+}
+
+.table thead th {
+  padding: 9px 14px 8px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font: 600 12.5px/1.3 var(--font-ui);
+  color: var(--ink);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table td {
+  height: 52px;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  counter-increment: entry;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 1px solid var(--ink);
+}
+
+.table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.table th:first-child,
+.table td:first-child {
+  position: relative;
+  padding-left: 46px;
+}
+
+.table tbody td:first-child::before {
+  content: counter(entry, decimal-leading-zero);
+  content: counter(entry, decimal-leading-zero) / '';
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font: 500 12px/1 var(--font-mono);
+  color: var(--ink-3);
+}
+
+/* Hand-applied: every stamp lands at its own angle, with its own patch of grain.
+   (Rotation goes through selectors because style="" is blocked by the CSP.) */
+.table tbody tr:nth-child(odd) .badge { transform: rotate(-1.4deg); --grain-at: -17px -9px; }
+.table tbody tr:nth-child(even) .badge { transform: rotate(0.8deg); --grain-at: -83px -41px; }
+.table tbody tr:nth-child(3n) .badge { transform: rotate(1.2deg); --grain-at: -140px -66px; }
+.table tbody tr .badge:nth-child(2) { transform: rotate(-0.5deg) translateY(1px); --grain-at: -52px -77px; }
+.table tbody tr .badge:nth-child(3) { transform: rotate(1.6deg) translateY(-1px); --grain-at: -9px -30px; }
+
+.table td.mono {
+  overflow-wrap: anywhere;
+}
+
+.device {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.device .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--ink-3);
+}
+
+.when {
+  display: block;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.when__ago {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: var(--ink-3);
+}
+
+/* Empty states: NIL, what a clerk writes on an empty register line. */
+
+.empty {
+  padding: 36px 0;
+  text-align: center;
+  color: var(--ink-2);
+}
+
+.empty::before {
+  content: 'Nil';
+  content: 'Nil' / '';
+  --grain-at: -60px -30px;
+  display: block;
+  width: max-content;
+  margin: 0 auto 12px;
+  padding: 5px 16px 4px;
+  border: 2px dashed var(--ink-3);
+  border-radius: 50%;
+  color: var(--ink-3);
+  font: 800 13px/1 var(--font-ui);
+  letter-spacing: var(--track-stamp);
+  text-transform: uppercase;
+  transform: rotate(-4deg);
+}
+
+/* An empty register is still a ruled ledger page */
+.register > .empty,
+.card--flush > .empty {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.empty--large {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 44px 0 48px;
+}
+
+.empty--large::before {
+  content: none;
+}
+
+.empty--large strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.empty--large .status-block__icon {
+  display: block;
+  margin: 0 0 12px 96px;
+  line-height: 0;
+}
+
+.empty--large .postmark {
+  transform: rotate(-4deg);
+}
+
+/* The data page: the holder's laminated identity page. Tint only; the rosette is
+   printed over the photo's corner and never under text, a seal or the perforation. */
+
+.holder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 44px;
+  align-items: start;
+  margin-bottom: 52px;
+}
+
+.datapage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--edge);
+  border-radius: 4px;
+  background: url('/img/page-tint-sheet.svg') 0 0 / 160px 160px, var(--sheet);
+  container-type: inline-size;
+}
+
+.datapage__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 22px 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.datapage__issuer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.datapage__issuer .icon {
+  color: var(--oxblood);
+  stroke-width: 1.2;
+}
+
+.datapage__title {
+  font: 400 13px/1.2 var(--font-doc);
+  letter-spacing: var(--track-doc);
+  text-transform: uppercase;
+}
+
+.datapage__subtitle {
+  display: block;
+  margin-top: 3px;
+  font: italic 400 13px/1.2 var(--font-doc);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-2);
+}
+
+.datapage__codes {
+  display: flex;
+  gap: 22px;
+  margin: 0;
+}
+
+.datapage__codes div {
+  display: grid;
+  gap: 1px;
+}
+
+.datapage__codes dd {
+  margin: 0;
+}
+
+.f-label {
+  font: 500 11.5px/1.3 var(--font-ui);
+  color: var(--ink-2);
+}
+
+.f-value {
+  margin: 0;
+  font: 600 15.5px/1.35 var(--font-ui);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.f-value--plain {
+  font-weight: 500;
+  text-transform: none;
+}
+
+.f-value--mono {
+  font: 500 15px/1.35 var(--font-mono);
+}
+
+/* Body: photo | fields | seal column | a plain 50px right margin only the perforation uses.
+   The seal is a grid item of the body, so it can never reach the MRZ clear zone. */
+.datapage__body {
+  position: relative;
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr) 168px;
+  grid-template-areas: 'photo fields seal';
+  gap: 0 24px;
+  padding: 20px 50px 18px 22px;
+}
+
+.datapage__photo {
+  grid-area: photo;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 170px;
+  padding-top: 14px;
+  overflow: hidden;
+  background: var(--photo);
+  color: var(--ink);
+  font: 400 92px/1 var(--font-doc);
+  outline: 1px solid rgba(31, 26, 29, 0.2);
+  outline-offset: -1px;
+}
+
+/* Guilloche printed over the photo's corner, as on a real data page */
+.datapage__photo::after {
+  content: '';
+  position: absolute;
+  right: -60px;
+  bottom: -64px;
+  width: 150px;
+  height: 150px;
+  background: url('/img/guilloche-rosette.svg') center / contain no-repeat;
+}
+
+.datapage__fields {
+  grid-area: fields;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 14px 20px;
+  margin: 0;
+  counter-reset: field;
+}
+
+.datapage__fields > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  counter-increment: field;
+}
+
+.datapage__fields dd {
+  margin: 0;
+}
+
+.datapage__fields .span-2 {
+  grid-column: 1 / -1;
+}
+
+.datapage__fields .f-label::before {
+  content: counter(field);
+  content: counter(field) / '';
+  margin-right: 5px;
+  font: 500 10.5px/1 var(--font-mono);
+}
+
+.datapage__stamp {
+  --grain-at: -37px -12px;
+  grid-area: seal;
+  align-self: end;
+  justify-self: center;
+  margin-bottom: 2px;
+  transform: rotate(-8deg);
+}
+
+.datapage > .perforation {
+  position: absolute;
+  right: 12px;
+  top: 120px;
+}
+
+.perforation circle {
+  fill: var(--perf);
+  stroke: var(--perf-edge);
+  stroke-width: 0.6;
+}
+
+/* Machine-readable zone: 44 cells of Overpass Mono (advance .616em = 27.1em a line).
+   Size capped at 19px; letter-spacing spreads the cells across the clear zone at fixed pitch.
+   The 14px declaration is the fallback for engines without container units. */
+.mrz {
+  margin: 0;
+  padding: 13px 22px 15px;
+  overflow: hidden;
+  border-top: 1px solid var(--rule);
+  background: var(--field);
+  font: 400 14px/1.5 var(--font-mono);
+  color: var(--ink);
+  white-space: pre;
+}
+
+@supports (width: 1cqi) {
+  .mrz {
+    --mrz-w: calc(100cqi - 44px);
+    --mrz-f: min(19px, calc(var(--mrz-w) / 27.2));
+    font-size: var(--mrz-f);
+    letter-spacing: calc((var(--mrz-w) - 27.1 * var(--mrz-f)) / 44);
+  }
+}
+
+.mrz span {
+  display: block;
+}
+
+@container (max-width: 600px) {
+  .datapage__fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

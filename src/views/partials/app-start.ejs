@@ -1,0 +1,42 @@
+<%- include('head') %>
+<%
+  const navLinks = [
+    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/account', label: 'Account' }
+  ];
+  if (currentUser && currentUser.role === 'admin') {
+    navLinks.push({ href: '/admin/users', label: 'Admin' });
+  }
+%>
+<body class="page-app">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="/dashboard">
+        <span class="brand__mark"><%- include('icon', { name: 'logo', size: 26 }) %></span>
+        <span class="brand__name"><%= appName %></span>
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <% navLinks.forEach((link) => { const active = currentPath.startsWith(link.href); %>
+        <a class="nav__link<%= active ? ' is-active' : '' %>" href="<%= link.href %>"<%- active ? ' aria-current="page"' : '' %>><span><%= link.label %></span></a>
+        <% }) %>
+      </nav>
+
+      <div class="topbar__user">
+        <span class="avatar <%= avatarTone(currentUser.name) %>" aria-hidden="true"><%= initial(currentUser.name) %></span>
+        <span class="topbar__name"><%= currentUser.name %></span>
+        <form action="/logout" method="post" class="topbar__logout">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="btn btn--ghost btn--sm" title="Sign out">
+            <%- include('icon', { name: 'log-out', size: 16 }) %><span class="topbar__logout-label">Sign out</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+  <div class="microprint microprint--bleed" aria-hidden="true"></div>
+
+  <%- include('toasts') %>
+
+  <main class="container" id="main">

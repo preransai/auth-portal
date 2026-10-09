@@ -1,0 +1,487 @@
+/* Sign in, register and recovery pages: an open passport booklet lying on the desk.
+   Recto (right) = the form; verso (left) = the passport's request page and its notes. */
+
+.page-auth {
+  background: var(--desk);
+}
+
+/* No transform, filter or container-type on any ancestor of .toasts (they stay fixed). */
+.auth {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 16px;
+  min-height: 100vh;
+  padding: 26px 24px 28px;
+}
+
+.auth__desk-head,
+.auth__booklet,
+.auth__legal {
+  width: min(100%, 980px);
+}
+
+.auth__desk-head {
+  display: flex;
+  align-items: center;
+}
+
+/* Brand mark: used on the cover (app pages) and on the desk (auth pages) */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--foil);
+  text-decoration: none;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.brand__mark {
+  display: block;
+  color: var(--foil);
+}
+
+.brand__mark .icon {
+  stroke-width: 1.4;
+}
+
+.brand__name {
+  padding-top: 2px;
+  font: 400 15px/1 var(--font-doc);
+  letter-spacing: var(--track-doc);
+  text-transform: uppercase;
+}
+
+.auth .brand {
+  gap: 10px;
+  color: var(--ink);
+}
+
+.auth .brand__mark {
+  color: var(--oxblood);
+}
+
+/* The oxblood cover peeking 9px past the pages, saddle-stitched down the fold */
+.auth__booklet {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 'verso recto';
+  padding: 9px;
+  border-radius: 9px;
+  background: var(--cover);
+}
+
+.auth__booklet::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 13%;
+  bottom: 13%;
+  width: 0;
+  border-left: 2px dashed var(--stitch);
+  transform: translateX(-1px);
+}
+
+.auth__brand,
+.auth__main {
+  position: relative;
+  min-width: 0;
+}
+
+/* Verso: the request page */
+.auth__brand {
+  grid-area: verso;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 46px 24px;
+  border-right: 1px solid var(--gutter);
+  border-radius: 3px 0 0 3px;
+  background: url('/img/page-tint-sheet.svg') 0 0 / 160px 160px, var(--sheet);
+  text-align: center;
+}
+
+.auth__seal {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.auth__seal .icon {
+  color: var(--oxblood);
+  stroke-width: 1;
+}
+
+.auth__seal-name {
+  padding-left: var(--track-doc);
+  font: 400 16px/1 var(--font-doc);
+  letter-spacing: var(--track-doc);
+  text-transform: uppercase;
+}
+
+.auth__seal-sub {
+  font: italic 400 14px/1 var(--font-doc);
+  color: var(--ink-2);
+}
+
+.auth__request {
+  max-width: 340px;
+  margin: 26px auto 0;
+  font: italic 400 17px/1.62 var(--font-doc);
+  color: var(--ink);
+}
+
+.auth__conditions {
+  width: 100%;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.auth__conditions h2 {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink);
+  font: 700 13px/1 var(--font-doc);
+  letter-spacing: var(--track-doc);
+  text-transform: uppercase;
+}
+
+.auth__points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: cond;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.auth__points li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+  counter-increment: cond;
+}
+
+.auth__points li::before {
+  content: counter(cond) '.';
+  content: counter(cond) '.' / '';
+  font: 500 12px/1.7 var(--font-mono);
+  color: var(--ink-2);
+}
+
+/* The verso's leftover height is the passport's empty visa page: security print only.
+   The rosette shrinks with the space and is dropped under 150px, so it never sits under text. */
+.auth__space {
+  flex: 1 1 0;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 0;
+  container-type: size;
+}
+
+.auth__rosette {
+  width: min(300px, calc(100cqh - 36px), 100cqw);
+  height: auto;
+  aspect-ratio: 1;
+}
+
+@container (max-height: 150px) {
+  .auth__rosette {
+    display: none;
+  }
+}
+
+.auth__imprint {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 14px;
+  width: 100%;
+  margin-top: 18px;
+  font: 400 11px/1.3 var(--font-mono);
+  color: var(--ink-2);
+}
+
+.auth__imprint .microprint {
+  flex: 1;
+  height: 6px;
+  margin-bottom: 3px;
+}
+
+.folio {
+  font: 500 11px/1 var(--font-mono);
+  color: var(--ink-2);
+}
+
+/* Recto: the form */
+.auth__main {
+  grid-area: recto;
+  padding: 26px 64px 34px 48px;
+  border-radius: 0 3px 3px 0;
+  background: url('/img/page-tint-sheet.svg') 80px 40px / 160px 160px, var(--sheet);
+}
+
+.auth__main > .perforation {
+  position: absolute;
+  right: 17px;
+  top: 116px;
+}
+
+.auth__main > .folio {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+}
+
+.auth__runhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font: 500 11.5px/1 var(--font-mono);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.auth__runhead + .microprint {
+  margin: 8px 0 28px;
+}
+
+.auth__header {
+  margin-bottom: 26px;
+}
+
+.auth__title {
+  font: 400 36px/1.1 var(--font-doc);
+  letter-spacing: -0.005em;
+}
+
+.auth__subtitle {
+  margin-top: 10px;
+  color: var(--ink-2);
+}
+
+.auth__subtitle a {
+  font-weight: 600;
+}
+
+.auth__subtitle strong {
+  color: var(--ink);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.auth__card > .alert {
+  margin-bottom: 22px;
+}
+
+.auth__note {
+  display: flex;
+  gap: 9px;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ink);
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+.auth__note .icon {
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+}
+
+.auth__footer-link {
+  display: flex;
+  justify-content: center;
+  margin-top: 26px;
+  font-size: 14px;
+}
+
+.auth__footer-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.auth__legal {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.auth__legal a {
+  color: var(--ink);
+}
+
+.auth .btn--primary {
+  height: 48px;
+  font-size: 15.5px;
+}
+
+/* Result screens: a seal or postmark is struck, then the heading */
+.status-block {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.status-block__icon {
+  display: block;
+  margin: 4px 0 8px;
+  line-height: 0;
+}
+
+.status-block .seal,
+.status-block .postmark {
+  --rot: -6deg;
+  transform: rotate(var(--rot));
+  animation: stamp-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.status-block .postmark {
+  --rot: -4deg;
+  margin-left: 96px;
+}
+
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    transform: rotate(var(--rot)) scale(1.35);
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: rotate(var(--rot)) scale(1);
+  }
+}
+
+.status-block + .alert {
+  margin-bottom: 4px;
+}
+
+.form--inline-center {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.auth__card > .text-center {
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .auth {
+    align-content: start;
+    gap: 12px;
+    padding: 14px 12px 24px;
+  }
+
+  .auth__desk-head {
+    padding: 4px 4px 0;
+  }
+
+  .auth__booklet {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'recto' 'verso';
+    padding: 6px;
+    border-radius: 7px;
+  }
+
+  /* The stitching runs across, between the pages */
+  .auth__booklet::after {
+    position: relative;
+    grid-area: verso;
+    align-self: start;
+    left: auto;
+    top: auto;
+    bottom: auto;
+    width: auto;
+    height: 0;
+    margin: -1px 6px 0;
+    border-left: 0;
+    border-top: 2px dashed var(--stitch);
+    transform: none;
+  }
+
+  .auth__main {
+    padding: 18px 20px 32px;
+    border-radius: 3px 3px 0 0;
+  }
+
+  .auth__brand {
+    padding: 30px 20px 22px;
+    border-right: 0;
+    border-top: 1px solid var(--gutter);
+    border-radius: 0 0 3px 3px;
+  }
+
+  .auth__main > .perforation,
+  .auth__space {
+    display: none;
+  }
+
+  .auth__title {
+    font-size: 31px;
+  }
+
+  .auth__runhead + .microprint {
+    margin-bottom: 22px;
+  }
+
+  .auth__request {
+    margin-top: 22px;
+    font-size: 16px;
+  }
+
+  .auth__conditions {
+    margin-top: 26px;
+  }
+
+  /* the folio and the printer's line travel together, centred, without the microprint */
+  .auth__imprint {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .auth__imprint .microprint {
+    display: none;
+  }
+
+  .auth__legal {
+    justify-content: center;
+  }
+
+  /* 216 + 48 fits the 284px recto at 360 */
+  .status-block .postmark {
+    margin-left: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth__title {
+    font-size: 29px;
+  }
+}
+
+@media (max-width: 400px) {
+  .auth__imprint {
+    gap: 10px;
+    font-size: 10.5px;
+  }
+}

@@ -1,0 +1,26 @@
+<%- include('../partials/auth-start', { title: 'Check your email', formNo: 'AP-5' }) %>
+<div class="status-block">
+  <span class="status-block__icon status-block__icon--primary"><%- include('../partials/postmark', { id: 'vs', top: appName, word: 'Posted', bottom: 'Account Office' }) %></span>
+  <h1 class="auth__title">Check your email</h1>
+  <p class="auth__subtitle">
+    We sent a verification link to <strong><%= email %></strong>.
+    Open it to activate your account. The link works once and expires in <%= security.verifyTokenHours %> hours.
+  </p>
+</div>
+
+<% if (devMailbox) { %>
+<div class="alert alert--info">
+  <%- include('../partials/icon', { name: 'inbox' }) %>
+  <p>Running in development mode, so no real email was sent. Open the <a href="/dev/mailbox">dev mailbox</a> to find the link.</p>
+</div>
+<% } %>
+
+<form action="/verify-email/resend" method="post" class="form form--inline-center">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input type="hidden" name="email" value="<%= email %>">
+  <p class="muted">Didn't get it? Check your spam folder, or</p>
+  <button type="submit" class="btn btn--secondary btn--block" data-loading-text="Sending...">Send the link again</button>
+</form>
+
+<p class="auth__footer-link"><a href="/login"><%- include('../partials/icon', { name: 'arrow-left', size: 16 }) %> Back to sign in</a></p>
+<%- include('../partials/auth-end') %>

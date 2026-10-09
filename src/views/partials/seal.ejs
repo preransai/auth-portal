@@ -1,0 +1,7 @@
+<%
+  // Office seal (inline SVG, CSP-safe). Usage:
+  // include('seal', { id, tone: 'admit'|'red'|'ink', top, word, bottom, className })
+  // top <= 16 chars, bottom <= 18 chars (the arcs are sized for that); id must be unique on the page.
+  const ring = (text) => String(text).toUpperCase();
+  const isDate = /\d/.test(bottom);
+%><span class="seal seal--<%= tone %><%= locals.className ? ' ' + className : '' %>" aria-hidden="true"><svg class="seal__svg" viewBox="0 0 160 100" width="160" height="100" focusable="false"><defs><path id="<%= id %>-t" d="M17 50a63 35 0 0 1 126 0"/><path id="<%= id %>-b" d="M9.2 50a70.8 41.8 0 0 0 141.6 0"/></defs><g fill="none" stroke="currentColor"><ellipse cx="80" cy="50" rx="77" ry="47" stroke-width="2.2"/><ellipse cx="80" cy="50" rx="57" ry="29"/></g><g fill="currentColor"><path d="M13.00 46.90L13.73 48.99L15.95 49.04L14.19 50.39L14.82 52.51L13.00 51.25L11.18 52.51L11.81 50.39L10.05 49.04L12.27 48.99Z"/><path d="M147.00 46.90L147.73 48.99L149.95 49.04L148.19 50.39L148.82 52.51L147.00 51.25L145.18 52.51L145.81 50.39L144.05 49.04L146.27 48.99Z"/></g><text class="seal__ring" text-anchor="middle"><textPath href="#<%= id %>-t" startOffset="50%"><%= ring(top) %></textPath></text><text class="seal__ring<%= isDate ? ' seal__ring--date' : '' %>" text-anchor="middle"><textPath href="#<%= id %>-b" startOffset="50%"><%= ring(bottom) %></textPath></text><text class="seal__word" x="80" y="55.6" text-anchor="middle"><%= ring(word) %></text></svg></span>

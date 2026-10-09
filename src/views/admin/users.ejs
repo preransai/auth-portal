@@ -1,0 +1,108 @@
+<%- include('../partials/app-start', { title: 'Users' }) %>
+<%
+  const tabs = [
+    ['all', 'All'],
+    ['unverified', 'Unverified'],
+    ['locked', 'Locked'],
+    ['admins', 'Admins'],
+    ['inactive', 'Deactivated']
+  ];
+%>
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Users</h1>
+    <p class="page-subtitle">Search accounts, unlock locked users and manage roles.</p>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><span class="stat__label">Total users</span><span class="stat__value"><%= stats.total %></span></div>
+  <div class="stat"><span class="stat__label">Verified</span><span class="stat__value"><%= stats.verified %></span></div>
+  <div class="stat"><span class="stat__label">Locked right now</span><span class="stat__value<%= stats.locked ? ' text-warning' : '' %>"><%= stats.locked %></span></div>
+  <div class="stat"><span class="stat__label">Admins</span><span class="stat__value"><%= stats.admins %></span></div>
+</div>
+
+<section class="card card--flush">
+  <div class="toolbar">
+    <nav class="tabs" aria-label="Filter users">
+      <% tabs.forEach(([key, label]) => { %>
+      <a class="tabs__item<%= status === key ? ' is-active' : '' %>" href="<%= listUrl({ q, status: key }) %>"<%- status === key ? ' aria-current="page"' : '' %>><%= label %></a>
+      <% }) %>
+    </nav>
+    <form class="search" action="/admin/users" method="get" role="search">
+      <% if (status !== 'all') { %><input type="hidden" name="status" value="<%= status %>"><% } %>
+      <label class="visually-hidden" for="user-search">Search users</label>
+      <%- include('../partials/icon', { name: 'search', size: 16, className: 'search__icon' }) %>
+      <input class="input search__input" id="user-search" type="search" name="q" value="<%= q %>" placeholder="Search name or email" maxlength="100">
+    </form>
+  </div>
+
+  <% if (users.length === 0) { %>
+  <p class="empty">No users match<%= q ? ` "${q}"` : '' %>.</p>
+  <% } else { %>
+  <div class="table-wrap">
+    <table class="table table--users">
+      <thead>
+        <tr>
+          <th scope="col">User</th>
+          <th scope="col">Status</th>
+          <th scope="col">Joined</th>
+          <th scope="col">Last sign-in</th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach((user) => { const isSelf = user.id === currentUser.id; %>
+        <tr<%- !user.isActive ? ' class="is-muted"' : '' %>>
+          <td>
+            <div class="user-cell">
+              <span class="avatar avatar--sm <%= avatarTone(user.name) %>" aria-hidden="true"><%= initial(user.name) %></span>
+              <div>
+                <p class="user-cell__name"><%= user.name %><% if (isSelf) { %> <span class="tag">You</span><% } %></p>
+                <p class="user-cell__email"><%= user.email %></p>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="badges">
+              <% if (user.isVerified) { %><span class="badge badge--success">Verified</span><% } else { %><span class="badge badge--neutral">Unverified</span><% } %>
+              <% if (user.isLocked) { %><span class="badge badge--warning"><%- include('../partials/icon', { name: 'lock', size: 12 }) %>Locked</span><% } %>
+              <% if (user.role === 'admin') { %><span class="badge badge--primary">Admin</span><% } %>
+              <% if (!user.isActive) { %><span class="badge badge--danger">Deactivated</span><% } %>
+            </div>
+          </td>
+          <td class="nowrap" data-label="Joined"><%= formatDate(user.createdAt) %></td>
+          <td class="nowrap" data-label="Last sign-in"><%= user.lastLoginAt ? timeAgo(user.lastLoginAt) : 'Never' %></td>
+          <td>
+            <div class="row-actions">
+              <% if (user.isLocked) { %>
+              <form action="/admin/users/<%= user.id %>/unlock" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="q" value="<%= q %>"><input type="hidden" name="status" value="<%= status %>">
+                <button type="submit" class="btn btn--secondary btn--xs"><%- include('../partials/icon', { name: 'unlock', size: 14 }) %>Unlock account</button>
+              </form>
+              <% } %>
+              <% if (!isSelf) { %>
+              <form action="/admin/users/<%= user.id %>/role" method="post"
+                data-confirm="<%= user.role === 'admin' ? `Remove admin rights from ${user.name}?` : `Give ${user.name} admin rights?` %>">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="q" value="<%= q %>"><input type="hidden" name="status" value="<%= status %>">
+                <button type="submit" class="btn btn--ghost btn--xs"><%= user.role === 'admin' ? 'Remove admin' : 'Make admin' %></button>
+              </form>
+              <form action="/admin/users/<%= user.id %>/status" method="post"
+                data-confirm="<%= user.isActive ? `Deactivate ${user.name}? They will be signed out immediately.` : `Reactivate ${user.name}?` %>">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="q" value="<%= q %>"><input type="hidden" name="status" value="<%= status %>">
+                <button type="submit" class="btn btn--xs <%= user.isActive ? 'btn--ghost-danger' : 'btn--ghost' %>"><%= user.isActive ? 'Deactivate' : 'Activate' %></button>
+              </form>
+              <% } %>
+            </div>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</section>
+<%- include('../partials/app-end') %>

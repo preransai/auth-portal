@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= subject %></title>
+</head>
+<body style="margin:0;padding:0;background:#E4E7EA;color:#1F1A1D;font-family:'Public Sans',Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#E4E7EA;padding:32px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:540px;background:#FFFFFF;border:1px solid #C7B8BE;">
+          <tr><td style="height:6px;background:#5A1A27;font-size:0;line-height:0;">&nbsp;</td></tr>
+          <tr>
+            <td align="center" style="padding:26px 36px 0;">
+              <p style="margin:0;font-family:'Libre Caslon Text',Georgia,'Times New Roman',serif;font-size:15px;letter-spacing:2.7px;text-transform:uppercase;color:#7A2232;"><%= appName %></p>
+              <p style="margin:6px 0 0;font-family:'Libre Caslon Text',Georgia,serif;font-style:italic;font-size:13px;color:#544B51;">Account Office</p>
+            </td>
+          </tr>
+          <tr><td style="padding:16px 36px 0;"><div style="border-top:3px double #7A2232;font-size:0;line-height:0;">&nbsp;</div></td></tr>
+          <tr>
+            <td style="padding:26px 36px 30px;">
+              <h1 style="margin:0 0 16px;font-family:'Libre Caslon Text',Georgia,serif;font-weight:400;font-size:24px;line-height:1.25;color:#1F1A1D;"><%= heading %></h1>
+              <% paragraphs.forEach((text) => { %>
+              <p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#544B51;"><%= text %></p>
+              <% }) %>
+              <% if (locals.action) { %>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0 20px;">
+                <tr>
+                  <td style="background:#7A2232;border:1px solid #5E1A27;">
+                    <a href="<%= action.url %>" style="display:inline-block;padding:13px 24px;font-size:15px;font-weight:700;color:#F4F0F1;text-decoration:none;"><%= action.label %></a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0 0 6px;font-size:13px;color:#695F65;">Or paste this link into your browser:</p>
+              <p style="margin:0 0 18px;font-family:'Overpass Mono','Courier New',monospace;font-size:12.5px;word-break:break-all;"><a href="<%= action.url %>" style="color:#7A2232;"><%= action.url %></a></p>
+              <% } %>
+              <p style="margin:22px 0 0;font-family:'Libre Caslon Text',Georgia,serif;font-style:italic;font-size:14px;color:#1F1A1D;">Account Office, <%= appName %></p>
+              <% if (locals.footnote) { %>
+              <p style="margin:18px 0 0;padding-top:16px;border-top:1px solid #DACFD3;font-size:13px;line-height:1.55;color:#695F65;"><%= footnote %></p>
+              <% } %>
+            </td>
+          </tr>
+        </table>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:540px;">
+          <tr>
+            <td style="padding:16px 4px 0;font-size:12px;line-height:1.5;color:#544B51;">You are receiving this because of activity on your <%= appName %> account. This mailbox is not monitored.</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

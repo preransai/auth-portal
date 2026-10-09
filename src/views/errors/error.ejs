@@ -1,0 +1,18 @@
+<% const layout = locals.currentUser ? 'app' : 'plain'; %>
+<%- include(`../partials/${layout}-start`, { title }) %>
+<section class="error-page">
+  <p class="error-page__code"><%= status %></p>
+  <h1 class="error-page__title"><%= title %></h1>
+  <p class="error-page__message"><%= message %></p>
+  <div class="error-page__actions">
+    <a class="btn btn--primary" href="/"><%- include('../partials/icon', { name: 'arrow-left', size: 16 }) %> Back to home</a>
+    <% if (status === 403 && !locals.currentUser) { %><a class="btn btn--secondary" href="/login">Sign in</a><% } %>
+  </div>
+  <% if (locals.stack) { %>
+  <details class="error-page__stack">
+    <summary>Stack trace (development only)</summary>
+    <pre><%= stack %></pre>
+  </details>
+  <% } %>
+</section>
+<%- include(`../partials/${layout}-end`) %>

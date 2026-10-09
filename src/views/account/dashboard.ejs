@@ -1,0 +1,121 @@
+<%- include('../partials/app-start', { title: 'Dashboard' }) %>
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Hello, <%= currentUser.firstName %></h1>
+    <p class="page-subtitle">Your account details and the latest sign-in activity.</p>
+  </div>
+  <a class="btn btn--secondary" href="/account"><%- include('../partials/icon', { name: 'settings', size: 16 }) %> Account settings</a>
+</div>
+
+<% const docNo = documentNumber(currentUser.id); const mrz = mrzLines(currentUser); %>
+<div class="holder">
+  <section class="datapage" aria-label="Your profile">
+    <header class="datapage__head">
+      <div class="datapage__issuer"><%- include('../partials/icon', { name: 'logo', size: 30 }) %>
+        <h2 class="datapage__title" id="profile-heading"><%= appName %> <span class="datapage__subtitle">Account passport</span></h2></div>
+      <dl class="datapage__codes">
+        <div><dt class="f-label">Type</dt><dd class="f-value f-value--mono">P</dd></div>
+        <div><dt class="f-label">Code</dt><dd class="f-value f-value--mono">APT</dd></div>
+        <div><dt class="f-label">Document no.</dt><dd class="f-value f-value--mono"><%= docNo %></dd></div>
+      </dl>
+    </header>
+    <div class="datapage__body">
+      <span class="datapage__photo <%= avatarTone(currentUser.name) %>" aria-hidden="true"><%= initial(currentUser.name) %></span>
+      <dl class="datapage__fields">
+        <div class="span-2"><dt class="f-label">Name of holder</dt><dd class="f-value"><%= currentUser.name %></dd></div>
+        <div class="span-2"><dt class="f-label">Sign-in email</dt><dd class="f-value f-value--plain"><%= currentUser.email %></dd></div>
+        <div><dt class="f-label">Category</dt><dd class="f-value"><%= currentUser.role === 'admin' ? 'Admin' : 'Member' %></dd></div>
+        <div><dt class="f-label">Date of issue</dt><dd class="f-value f-value--mono"><%= passportDate(currentUser.createdAt) %></dd></div>
+        <div><dt class="f-label">Email verified</dt><% if (currentUser.verifiedAt) { %><dd class="f-value f-value--mono"><%= passportDate(currentUser.verifiedAt) %></dd><% } else { %><dd class="f-value">Yes</dd><% } %></div>
+      </dl>
+      <% if (currentUser.verifiedAt) { %><%- include('../partials/seal', { id: 'dp', tone: 'admit', top: appName.length > 16 ? 'Account Office' : appName, word: 'Verified', bottom: passportDate(currentUser.verifiedAt), className: 'datapage__stamp' }) %><% } %>
+    </div>
+    <%- include('../partials/perforation', { text: docNo, pitch: 3 }) %>
+    <p class="mrz" aria-hidden="true"><span><%= mrz[0] %></span><span><%= mrz[1] %></span></p>
+  </section>
+
+  <div class="obs">
+    <section aria-labelledby="last-heading">
+      <h2 id="last-heading">Last sign-in</h2>
+      <% if (lastSignIn) { %>
+      <div class="entry-stamp">
+        <p class="entry-stamp__top" aria-hidden="true"><span><%- include('../partials/icon', { name: 'entry', size: 15 }) %>Entry</span><span>Web</span></p>
+        <dl>
+          <dt class="visually-hidden">When</dt><dd class="entry-stamp__date"><%= passportDate(lastSignIn.createdAt) %></dd>
+          <dd class="entry-stamp__time"><%= formatTime(lastSignIn.createdAt) %></dd>
+          <dt class="visually-hidden">Device</dt><dd class="entry-stamp__device"><%= lastSignIn.device %></dd>
+          <dt class="visually-hidden">IP address</dt><dd class="entry-stamp__ip"><%= formatIp(lastSignIn.ip) %></dd>
+        </dl>
+      </div>
+      <p class="obs__ago"><strong><%= timeAgo(lastSignIn.createdAt) %></strong>, before this session.</p>
+      <% } else { %>
+      <div class="entry-stamp entry-stamp--blank" aria-hidden="true"><p class="entry-stamp__top"><span>Entry</span><span>Web</span></p><dl><dd class="entry-stamp__date">&mdash; &mdash; &mdash;</dd></dl></div>
+      <p class="card__big">First sign-in</p>
+      <p class="muted">This is your first entry. Earlier sign-ins will be listed here.</p>
+      <% } %>
+    </section>
+
+    <section aria-labelledby="security-heading">
+      <h2 id="security-heading">Observations</h2>
+      <dl class="meta meta--spaced">
+        <div>
+          <dt>Password</dt>
+          <dd><%= currentUser.passwordChangedAt ? 'Changed ' + timeAgo(currentUser.passwordChangedAt) : 'Set when you signed up' %></dd>
+        </div>
+        <div>
+          <dt>This session</dt>
+          <dd><%= sessionExpires ? 'Remembered until ' + formatDate(sessionExpires) : 'Ends when the browser closes' %></dd>
+        </div>
+        <div>
+          <dt>Failed attempts</dt>
+          <dd>
+            <% if (failedCount) { %><span class="text-danger"><%= failedCount %> in the last <%= activity.length %> sign-ins</span>
+            <% } else { %>None recently<% } %>
+          </dd>
+        </div>
+      </dl>
+      <a class="card__link" href="/account#change-password">Change password <%- include('../partials/icon', { name: 'arrow-right', size: 15 }) %></a>
+    </section>
+  </div>
+</div>
+
+<section class="register" aria-labelledby="activity-heading">
+  <div class="register__head">
+    <div>
+      <h2 id="activity-heading">Sign-in register</h2>
+      <p class="card__subtitle">The last 10 attempts to sign in to your account, including failed ones.</p>
+    </div>
+    <p class="register__count"><%= activity.length %> <%= activity.length === 1 ? 'entry' : 'entries' %><% if (failedCount) { %> &middot; <%= failedCount %> refused<% } %></p>
+  </div>
+  <% if (activity.length) { %>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr><th scope="col">Result</th><th scope="col">Device</th><th scope="col">IP address</th><th scope="col">When</th></tr>
+      </thead>
+      <tbody>
+        <% activity.forEach((attempt) => { %>
+        <tr>
+          <td>
+            <span class="badge <%= attempt.success ? 'badge--success' : 'badge--danger' %>">
+              <%- include('../partials/icon', { name: attempt.success ? 'check' : 'x', size: 13 }) %><%= attempt.label %>
+            </span>
+          </td>
+          <td>
+            <span class="device"><%- include('../partials/icon', { name: attempt.deviceKind === 'desktop' ? 'monitor' : attempt.deviceKind, size: 16 }) %><%= attempt.device %></span>
+          </td>
+          <td class="mono"><%= formatIp(attempt.ip) %></td>
+          <td>
+            <span class="when"><%= formatDateTime(attempt.createdAt) %></span>
+            <span class="when__ago"><%= timeAgo(attempt.createdAt) %></span>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } else { %>
+  <p class="empty">No sign-in activity yet.</p>
+  <% } %>
+</section>
+<%- include('../partials/app-end') %>

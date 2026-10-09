@@ -1,0 +1,14 @@
+<%
+  const messages = locals.takeFlash ? takeFlash() : [];
+  // The slip's stamp word; the message itself never repeats it.
+  const toastLabels = { success: 'Recorded', error: 'Refused', info: 'Notice', warning: 'Caution' };
+%>
+<div class="toasts" aria-live="polite" aria-atomic="false">
+  <% messages.forEach((msg) => { %>
+  <div class="toast toast--<%= msg.type %>" role="<%= msg.type === 'error' ? 'alert' : 'status' %>" data-toast>
+    <span class="toast__label"><%= toastLabels[msg.type] || 'Notice' %></span>
+    <p class="toast__text"><%= msg.message %></p>
+    <button type="button" class="toast__close" data-dismiss-toast aria-label="Dismiss notification"><%- include('icon', { name: 'x', size: 16 }) %></button>
+  </div>
+  <% }) %>
+</div>

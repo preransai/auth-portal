@@ -1,0 +1,23 @@
+<%- include('../partials/auth-start', { title: verified ? 'Email verified' : 'Link not valid', formNo: 'AP-6' }) %>
+<% if (verified) { %>
+<div class="status-block">
+  <span class="status-block__icon status-block__icon--success"><%- include('../partials/seal', { id: 'vr', tone: 'admit', top: appName.length > 16 ? 'Account Office' : appName, word: 'Verified', bottom: passportDate(new Date()) }) %></span>
+  <h1 class="auth__title">Email verified</h1>
+  <p class="auth__subtitle"><strong><%= email %></strong> is confirmed. You can sign in to your account now.</p>
+</div>
+<a class="btn btn--primary btn--block" href="/login">Continue to sign in</a>
+<% } else { %>
+<div class="status-block">
+  <span class="status-block__icon status-block__icon--danger"><%- include('../partials/seal', { id: 'vr', tone: 'red', top: appName.length > 16 ? 'Account Office' : appName, word: 'Void', bottom: 'Link not valid' }) %></span>
+  <h1 class="auth__title">This link doesn't work</h1>
+  <p class="auth__subtitle">
+    Verification links expire after <%= security.verifyTokenHours %> hours and can only be used once.
+    If you already verified your email, just sign in.
+  </p>
+</div>
+<div class="button-stack">
+  <a class="btn btn--primary btn--block" href="/verify-email/resend">Get a new link</a>
+  <a class="btn btn--secondary btn--block" href="/login">Go to sign in</a>
+</div>
+<% } %>
+<%- include('../partials/auth-end') %>

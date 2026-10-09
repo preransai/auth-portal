@@ -1,0 +1,43 @@
+<%- include('../partials/plain-start', { title: 'Dev mailbox' }) %>
+<div class="page-header">
+  <div>
+    <p class="eyebrow-tag">Development only</p>
+    <h1 class="page-title">Dev mailbox</h1>
+    <p class="page-subtitle">Emails the app would have sent. They live in memory and disappear on restart. This page doesn't exist in production.</p>
+  </div>
+  <% if (messages.length) { %>
+  <form action="/dev/mailbox/clear" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button type="submit" class="btn btn--secondary"><%- include('../partials/icon', { name: 'trash', size: 16 }) %> Clear</button>
+  </form>
+  <% } %>
+</div>
+
+<section class="card card--flush">
+  <% if (messages.length === 0) { %>
+  <div class="empty empty--large">
+    <span class="status-block__icon status-block__icon--primary"><%- include('../partials/postmark', { id: 'mb', top: appName, word: 'No post', bottom: 'Account Office' }) %></span>
+    <p><strong>No emails yet.</strong></p>
+    <p class="muted">Register an account or request a password reset and the email will show up here.</p>
+  </div>
+  <% } else { %>
+  <ul class="mail-list">
+    <% messages.forEach((message) => { %>
+    <li class="mail-list__item">
+      <a class="mail-list__link" href="/dev/mailbox/<%= message.id %>">
+        <span class="mail-list__icon"><%- include('../partials/icon', { name: 'mail', size: 16 }) %></span>
+        <span class="mail-list__body">
+          <span class="mail-list__subject"><%= message.subject %></span>
+          <span class="mail-list__to">To <%= message.to %></span>
+        </span>
+        <span class="mail-list__time"><%= timeAgo(message.sentAt) %></span>
+      </a>
+      <% if (message.action) { %>
+      <a class="btn btn--secondary btn--xs mail-list__action" href="<%= message.action.url %>"><%= message.action.label %> <%- include('../partials/icon', { name: 'arrow-right', size: 14 }) %></a>
+      <% } %>
+    </li>
+    <% }) %>
+  </ul>
+  <% } %>
+</section>
+<%- include('../partials/plain-end') %>

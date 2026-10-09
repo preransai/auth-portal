@@ -1,0 +1,351 @@
+/* Form fields, password tools, checkboxes, the application form's numbering. */
+
+.form {
+  display: grid;
+  gap: 20px;
+}
+
+.form__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+}
+
+.field__label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.field__label {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.field__aside {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.field__hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.field__error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--red);
+}
+
+.field__error .icon {
+  width: 15px;
+  height: 15px;
+  margin-top: 1px;
+  stroke-width: 1.5; /* the JS-inserted icon carries 1.75 */
+}
+
+/* A box with a writing line: rule-strong sides, a 2px ink baseline. */
+.input {
+  width: 100%;
+  height: 46px;
+  padding: 0 13px;
+  border: 1px solid var(--rule-strong);
+  border-bottom: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--field);
+  font-size: 15.5px;
+  transition: border-color 0.15s;
+}
+
+.input::placeholder {
+  color: var(--ink-3);
+  opacity: 1;
+}
+
+.input:hover {
+  border-color: var(--ink-2);
+  border-bottom-color: var(--ink);
+}
+
+.input:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-color: var(--ink);
+}
+
+/* Read-only values are printed, not written in */
+.input[readonly] {
+  background: transparent;
+  border: 1px dashed var(--rule-strong);
+  color: var(--ink-2);
+}
+
+.field--error .input,
+.field--error .input:hover {
+  border-color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+.input-group {
+  position: relative;
+}
+
+.input--password {
+  padding-right: 50px;
+}
+
+.input-group__toggle {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 36px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.input-group__toggle:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.input-group__toggle .icon--hide,
+.input-group__toggle[aria-pressed='true'] .icon--show {
+  display: none;
+}
+
+.input-group__toggle[aria-pressed='true'] .icon--hide {
+  display: block;
+}
+
+/* Checkbox: a square box ticked in ink */
+.checkbox {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.checkbox input {
+  -webkit-appearance: none;
+  appearance: none;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: var(--field) center / 12px no-repeat;
+  cursor: pointer;
+}
+
+.checkbox input:checked {
+  background-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.2 6.3 4.9 9 9.8 3' fill='none' stroke='%23F4F0F1' stroke-width='1.8'/%3E%3C/svg%3E");
+}
+
+.field--error .checkbox input {
+  border-color: var(--red);
+}
+
+/* Password strength slip: a white slip under the password field.
+   It sits on --field, so --ink-3 boxes pass there. */
+.pw-check {
+  display: grid;
+  gap: 12px;
+  margin-top: -6px;
+  padding: 14px 14px 13px;
+  border: 1px solid var(--rule-strong);
+  background: var(--field);
+}
+
+.pw-meter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.pw-meter__track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+}
+
+.pw-meter__seg {
+  height: 6px;
+  background: var(--meter-off);
+  transition: background-color 150ms;
+}
+
+.pw-meter[data-strength='1'] .pw-meter__seg:nth-child(-n + 1) {
+  background: var(--red);
+}
+
+.pw-meter[data-strength='2'] .pw-meter__seg:nth-child(-n + 2) {
+  background: var(--ink);
+}
+
+.pw-meter[data-strength='3'] .pw-meter__seg:nth-child(-n + 3),
+.pw-meter[data-strength='4'] .pw-meter__seg {
+  background: var(--admit);
+}
+
+.pw-meter__label {
+  font-size: 13px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.pw-meter__label strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pw-meter[data-strength='1'] .pw-meter__label strong {
+  color: var(--red);
+}
+
+.pw-meter[data-strength='3'] .pw-meter__label strong,
+.pw-meter[data-strength='4'] .pw-meter__label strong {
+  color: var(--admit);
+}
+
+.pw-rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px 16px;
+  margin: 0;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--rule);
+  list-style: none;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--ink-2);
+}
+
+.pw-rules li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pw-rules li::before {
+  content: '';
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--ink-3);
+  background: var(--field) center / 10px no-repeat;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.pw-rules li.is-met {
+  color: var(--admit);
+}
+
+.pw-rules li.is-met::before {
+  border-color: var(--admit);
+  background-color: var(--admit);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.8 5.2 4 7.4 8.3 2.6' fill='none' stroke='%23F4F0F1' stroke-width='1.7'/%3E%3C/svg%3E");
+}
+
+.pw-rules li.is-failed {
+  color: var(--red);
+}
+
+.pw-rules li.is-failed::before {
+  border-color: var(--red);
+}
+
+/* Application form (/register): question numbers hang in the page margin, from a CSS
+   counter, so label.textContent is unchanged and assistive tech hears nothing extra. */
+form[action='/register'] {
+  counter-reset: q;
+}
+
+form[action='/register'] .field {
+  position: relative;
+  counter-increment: q;
+}
+
+form[action='/register'] .field::before {
+  content: counter(q) '.';
+  content: counter(q) '.' / '';
+  position: absolute;
+  left: -30px;
+  top: 1px;
+  font: 500 12px/1.4 var(--font-mono);
+  color: var(--ink-2);
+}
+
+/* The declaration: the signature line of the form */
+.field--declaration {
+  padding-top: 14px;
+  border-top: 1px solid var(--ink);
+}
+
+form[action='/register'] .field--declaration::before {
+  top: 15px;
+}
+
+/* Delete confirmation: six 34px character boxes for D-E-L-E-T-E
+   (Overpass advance .616em x 20px = 12.32px; letter-spacing = 34 - 12.32 = 21.68px).
+   Chrome counts the letter-spacing after the last letter, so the comb sits 11px in from
+   both edges (ticks at 11.5 + 34n) and the box is wide enough that typing the sixth
+   letter never scrolls the text out of its boxes: 1 + 11 + 6 x 34 + 11 + 1 = 228 (+1 for the tick). */
+#confirmText {
+  width: 229px;
+  max-width: 100%;
+  padding-left: 22.34px;
+  padding-right: 0;
+  background: url('/img/comb-34.svg') repeat-x -22px bottom / 34px 12px, var(--field);
+  font: 500 20px/1 var(--font-mono);
+  letter-spacing: 21.68px;
+}
+
+@media (max-width: 900px) {
+  form[action='/register'] {
+    padding-left: 22px;
+  }
+
+  form[action='/register'] .field::before {
+    left: -22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pw-rules {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,18 @@
+<aside class="auth__brand" aria-labelledby="conditions-heading">
+  <div class="auth__seal" aria-hidden="true">
+    <%- include('icon', { name: 'logo', size: 40 }) %>
+    <span class="auth__seal-name"><%= appName %></span>
+    <span class="auth__seal-sub">Account Office</span>
+  </div>
+  <p class="auth__request">The <%= appName %> requests all whom it may concern to let the bearer sign in freely, and to turn away anyone who is only guessing the password.</p>
+  <div class="auth__conditions">
+    <h2 id="conditions-heading">Conditions of issue</h2>
+    <ol class="auth__points">
+      <li>Passwords are hashed with bcrypt and never stored or shown in plain text.</li>
+      <li>An account opens only after its email address has been verified.</li>
+      <li>Repeated wrong passwords lock the account for a while, and sign-in attempts are rate limited.</li>
+    </ol>
+  </div>
+  <div class="auth__space" aria-hidden="true"><img class="auth__rosette" src="/img/guilloche-rosette-sheet.svg" alt="" width="300" height="300"></div>
+  <p class="auth__imprint"><span class="folio" aria-hidden="true">2</span><span class="microprint" aria-hidden="true"></span><span>Printed with Node.js &middot; Express &middot; MongoDB</span></p>
+</aside>

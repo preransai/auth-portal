@@ -1,0 +1,15 @@
+<%- include('head') %>
+<body class="page-auth">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="auth">
+    <header class="auth__desk-head">
+      <a class="brand" href="/"><span class="brand__mark"><%- include('icon', { name: 'logo', size: 26 }) %></span><span class="brand__name"><%= appName %></span></a>
+    </header>
+    <div class="auth__booklet">
+      <main class="auth__main" id="main">
+        <% if (locals.formNo) { %><%- include('perforation', { text: formNo, pitch: 4.4 }) %><% } %>
+        <span class="folio" aria-hidden="true">3</span>
+        <%- include('toasts') %>
+        <div class="auth__card">
+          <p class="auth__runhead" aria-hidden="true"><span>Form <%= locals.formNo || 'AP' %></span><span>Rev. 10/2026</span></p>
+          <div class="microprint" aria-hidden="true"></div>
